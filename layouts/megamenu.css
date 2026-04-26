@@ -1,0 +1,72 @@
+
+.mega-menu-wrapper{
+  position: relative;
+}
+.mega-menu {
+  width: 130vh;
+  padding: 10px;
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 0px 6px 18px rgba(0, 0, 0, 0.1);
+  margin-right: 20px;
+  left: -150px !important;
+
+}
+
+.mega-card {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.mega-item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 12px;
+  border-radius: 6px;
+  transition: all 0.3s ease-in-out;
+  cursor: pointer;
+}
+
+.mega-item:hover {
+  background-color: #f8f8f8;
+  width: 35vh;
+}
+
+.mega-img img {
+  width: 8rem;
+  object-fit: cover;
+  height: 8rem;
+}
+
+.mega-content {
+  flex: 1;
+}
+
+.mega-title {
+  font-weight: 700;
+  font-size: 25px;
+  margin: 0;
+  text-transform: uppercase;
+}
+
+.mega-desc {
+  font-size: 15px;
+  color: #666;
+  margin: 0;
+}
+
+.btn-view-all {
+  background: #ff4a00;
+  color: #fff;
+  border: none;
+  padding: 10px 24px;
+  font-weight: 600;
+  font-size: 14px;
+  border-radius: 6px;
+  transition: background 0.3s;
+}
+
+.btn-view-all:hover {
+  background: #e13e00;
+}
