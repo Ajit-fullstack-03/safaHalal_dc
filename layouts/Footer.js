@@ -40,7 +40,7 @@ const Footer1 = () => {
                   </p>
                   <span>Interested in working with us?</span> <br />
                   <a href="mailto:info@example.com" className="link">
-                    safahalalmd@gmail.com
+                    safahalaldc@gmail.com
                   </a>
                   <div className="social-icon d-flex align-items-center">
                     <a href="https://www.facebook.com/profile.php?id=61569094628655" target="_blank">
@@ -123,11 +123,11 @@ const Footer1 = () => {
                 </div>
                 <div className="footer-address-text">
                   <h6>
-                    4307 St Barnabas Rd, Marlow Heights, MD 20748
+                    1917 18th St NW, Washington, DC 20009, United States
                   </h6>
                   <h5>Contact:</h5>
                   <h6>
-                    <a href="tel:+1 (240) 455-7998">+1 (240) 455-7998</a>
+                    <a href="tel:+1 202-885-9430">+1 202-885-9430</a>
                   </h6>
 
                 </div>
@@ -285,11 +285,11 @@ const Footer2 = () => {
                     1403 Washington Ave, New Orlea <br />
                     ns, LA 70130, United States
                   </p>
-                  <a href="mailto:safahalalmd@gmail.com" className="link">
+                  <a href="mailto:safahalaldc@gmail.com" className="link">
                     info@example.com
                   </a>
-                  <a href="tel:+1 (240) 455-7998" className="number">
-                    +1 (240) 455-7998
+                  <a href="tel:+1 202-885-9430" className="number">
+                    +1 202-885-9430
                   </a>
                   <ul className="info-date">
                     <li>

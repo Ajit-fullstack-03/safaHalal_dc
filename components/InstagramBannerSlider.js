@@ -8,7 +8,7 @@ const InstagramBannerSlider = () => {
 
   const imgarray = [
     "Burger.png","burrito.png","Chicken-Salad.png","Fish-Shrimp.png","Fried-Chicken.png","Pasta.png","quesadilla.png","Rice-Bowl.png",
-    "Teco.png","Tender.png","Wings.png"
+    "Teco.png","Tender.png"
   ];
   const basecatagories = "/assets/img/";
 

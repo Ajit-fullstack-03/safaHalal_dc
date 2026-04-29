@@ -497,7 +497,7 @@ const page = () => {
                     <div className="content">
                       <h5>24/7 Support center</h5>
                       <h3>
-                        <a href="tel:+1 (240) 455-7998">+1 (240) 455-7998</a>
+                        <a href="tel:+1 202-885-9430">+1 202-885-9430</a>
                       </h3>
                     </div>
                   </div>

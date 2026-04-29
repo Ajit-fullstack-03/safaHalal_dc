@@ -703,7 +703,7 @@ const Sidebar = ({ toggle, setToggle }) => {
                     </div>
                     <div className="offcanvas__contact-text">
                       <a target="_blank" href="#">
-                        4307 St Barnabas Rd, Marlow Heights, MD 20748
+                        1917 18th St NW, Washington, DC 20009, United States
                       </a>
                     </div>
                   </li>
@@ -714,7 +714,7 @@ const Sidebar = ({ toggle, setToggle }) => {
                     <div className="offcanvas__contact-text">
                       <a href="tel:+013-003-003-9993">
                         <span className="mailto:info@enofik.com">
-                          safahalalmd@gmail.com
+                          safahalaldc@gmail.com
                         </span>
                       </a>
                     </div>
@@ -734,7 +734,7 @@ const Sidebar = ({ toggle, setToggle }) => {
                       <i className="far fa-phone" />
                     </div>
                     <div className="offcanvas__contact-text">
-                      <a href="tel:+1 (240) 455-7998">+1 (240) 455-7998</a>
+                      <a href="tel:+1 202-885-9430">+1 202-885-9430</a>
                     </div>
                   </li>
                 </ul>

@@ -5,7 +5,7 @@ import PageBanner from "@/components/PageBanner";
 import FoodKingLayout from "@/layouts/FoodKingLayout";
 import axios from "axios";
 import Swal from "sweetalert2";
-import { base_url,resturantId } from "@/utility/config";
+import { base_url, resturantId } from "@/utility/config";
 import Loader from "@/components/Loader";
 
 const page = () => {
@@ -13,20 +13,20 @@ const page = () => {
     {
       icon: "location.svg",
       title: "address line",
-      content: "4307 St Barnabas Rd, Marlow Heights, MD 20748",
+      content: "1917 18th St NW, Washington, DC 20009, United States",
       delay: ".3s",
     },
     {
       icon: "phone.svg",
       title: "Phone Number",
-      content: "+1 (240) 455-7998",
+      content: "+1 202-885-9430",
       delay: ".5s",
       active: true,
     },
     {
       icon: "email.svg",
       title: "Mail Adress",
-      content: "safahalalmd@gmail.com",
+      content: "safahalaldc@gmail.com",
       delay: ".7s",
     },
   ];
@@ -90,7 +90,7 @@ const page = () => {
   return (
     <FoodKingLayout>
       {loading && <Loader />}
-      <PageBanner pageName={"Contact us"} pageKey={"Contact"}/>
+      <PageBanner pageName={"Contact us"} pageKey={"Contact"} />
       {/*<< Contact Info Section Start >>*/}
       <section className="contact-info-section fix section-padding section-bg">
         <div className="container">
@@ -102,9 +102,8 @@ const page = () => {
                 data-wow-delay={item.delay}
               >
                 <div
-                  className={`contact-info-items ${
-                    item.active ? "active" : ""
-                  } text-center`}
+                  className={`contact-info-items ${item.active ? "active" : ""
+                    } text-center`}
                 >
                   <div className="icon">
                     <img src={`assets/img/icon/${item.icon}`} alt="icon-img" />
@@ -131,17 +130,24 @@ const page = () => {
                     Get in touch
                   </h3>
                   <p className="wow fadeInUp" data-wow-delay=".5s">
-                    Visit us at Safa Halal or drop us a message anytime. <br/>
-                    We’re located in Marlow Heights, MD, <br/>
+                    Visit us at Safa Halal or drop us a message anytime. <br />
+                    We’re located in Marlow Heights, MD, <br />
                     and always happy to serve you fresh and delicious food.
                   </p>
                   <div className="google-map wow fadeInUp" data-wow-delay=".7s">
-                    <iframe
+                    {/* <iframe
                       src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3108.0894116339473!2d-76.94225039999999!3d38.8304131!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89b7bb0015a075e7%3A0xfe404e3acac76fb0!2sSafa%20Halal!5e0!3m2!1sen!2sin!4v1755755506141!5m2!1sen!2sin" 
                       style={{ border: 0 }}
                       allowFullScreen
                       loading="lazy"
-                    />
+                    /> */}
+                    <iframe
+                      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2837.5653849025784!2d-77.0414102!3d38.9160884!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89b7b7191526301d%3A0xc6a089f5ba241c92!2sSafa%20Halal!5e1!3m2!1sen!2sin!4v1777311373576!5m2!1sen!2sin"
+                      style={{ border: 0 }}
+                      allowFullScreen
+                      loading="lazy">
+
+                    </iframe>
                   </div>
                 </div>
               </div>
