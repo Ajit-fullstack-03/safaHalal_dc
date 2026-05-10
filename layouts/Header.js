@@ -15,6 +15,7 @@ import { auth } from "@/utility/firebase/firebase";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useRouter } from "next/navigation";
 import { Modal, Button } from "react-bootstrap";
+import { isAvailable } from "@/utility/availability";
 
 const Header = ({ header }) => {
   switch (header) {
@@ -62,7 +63,7 @@ const Menus = () => {
       setCartItems([]);
     }
   };
-  const categories = useSelector((state) => state.menu.menuItems);
+  const {menuItems, dateTime} = useSelector((state) => state.menu);
   const setCategoryId = (id) => {
     localStorage.setItem("categoryId", id);
   };
@@ -102,13 +103,21 @@ const Menus = () => {
           <Dropdown.Menu className="mega-menu">
             <div className="container">
               <div className="row gy-4">
-                {categories.length === 0 ? (
-                  <p>Loading categories...</p>
+                {menuItems.length === 0 ? (
+                  <p>Loading menuItems...</p>
                 ) : (
-                  categories.map((category, index) => {
+                  menuItems.map((category, index) => {
                     const imageUrl = `${basecatagories}category/${encodeURIComponent(
-                      category.image
+                      category.image,
                     )}`;
+
+                    const available = isAvailable({
+                      available_days: category.available_days,
+                      start_time: category.start_time,
+                      end_time: category.end_time,
+                      currentDate: dateTime,
+                      outofStock: category?.outofStock,
+                    });
 
                     return (
                       <div key={index} className="col-md-4 mega-card">
@@ -121,11 +130,11 @@ const Menus = () => {
                           }}
                         >
                           <div
-                            className="mega-item"
+                            className={`mega-item ${!available ? "category-disabled" : "" }`}
                             onClick={() => {
                               localStorage.setItem(
                                 "categoryId",
-                                category.categoryId
+                                category.categoryId,
                               );
                               window.dispatchEvent(new Event("storageUpdate"));
                             }}
@@ -390,7 +399,9 @@ const Header1 = () => {
                   <Link href="/" className="header-logo">
                     <img
                       src="assets/img/logo/output-onlinepngtools.png"
-                      alt="logo-img" width={100} height={100}
+                      alt="logo-img"
+                      width={100}
+                      height={100}
                     />
                   </Link>
                 </div>
@@ -412,7 +423,7 @@ const Header1 = () => {
                           <li>
                             <img
                               src={`${basecatagories}menu/${encodeURIComponent(
-                                item.image
+                                item.image,
                               )}`}
                               alt="image"
                             />
@@ -434,7 +445,7 @@ const Header1 = () => {
                         <span>
                           Total : $
                           {(calculateCartTotal() + calculateTaxTotal()).toFixed(
-                            2
+                            2,
                           )}
                         </span>
                       </div>
@@ -738,7 +749,10 @@ const Sidebar = ({ toggle, setToggle }) => {
                     </div>
                   </li>
                 </ul>
-                <div className="header-button mt-4" style={{ cursor: "pointer" }}>
+                <div
+                  className="header-button mt-4"
+                  style={{ cursor: "pointer" }}
+                >
                   <div onClick={MyProfile} className="theme-btn">
                     <span className="button-content-wrapper d-flex align-items-center justify-content-center">
                       <span className="button-icon">
@@ -759,7 +773,10 @@ const Sidebar = ({ toggle, setToggle }) => {
                   </Link>
                 </div>
 
-                <div className="header-button mt-4" style={{ cursor: "pointer" }}>
+                <div
+                  className="header-button mt-4"
+                  style={{ cursor: "pointer" }}
+                >
                   <div onClick={OrderHistory} className="theme-btn">
                     <span className="button-content-wrapper d-flex align-items-center justify-content-center">
                       <span className="button-icon">

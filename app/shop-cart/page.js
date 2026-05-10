@@ -6,14 +6,14 @@ import Cta from "@/components/Cta";
 import PageBanner from "@/components/PageBanner";
 import FoodKingLayout from "@/layouts/FoodKingLayout";
 import Link from "next/link";
-import basecatagories from "@/utility/config";
+import basecatagories, { storeId } from "@/utility/config";
 import Swal from "sweetalert2";
-import { base_url,resturantId } from "@/utility/config";
+import { base_url, resturantId } from "@/utility/config";
 import { loadStripe } from "@stripe/stripe-js";
 import { useRouter } from "next/navigation";
 import Loader from "@/components/Loader";
 const stripePromise = loadStripe(
-  "pk_test_51QQqgXAxdNbSCuvgji1fjm36pgrF3a3Kxed1uKRdQKdt94NiomVbHcYVofEV6UwBsq8E6FTAUTKbdEm2Otb4G1P900sF8MmmaB"
+  "pk_test_51QQqgXAxdNbSCuvgji1fjm36pgrF3a3Kxed1uKRdQKdt94NiomVbHcYVofEV6UwBsq8E6FTAUTKbdEm2Otb4G1P900sF8MmmaB",
 );
 
 const page = () => {
@@ -38,7 +38,18 @@ const page = () => {
       const subtotal = params.get("subtotal") || "";
       const orderType = params.get("orderType") || "";
       if (sessionId) {
-        orderCreateApi(name,email,phoneNo,address,sessionId,totalqty,total,taxAmount,subtotal,orderType);
+        orderCreateApi(
+          name,
+          email,
+          phoneNo,
+          address,
+          sessionId,
+          totalqty,
+          total,
+          taxAmount,
+          subtotal,
+          orderType,
+        );
       }
     }
   }, []);
@@ -61,19 +72,20 @@ const page = () => {
     total,
     taxAmount,
     subtotal,
-    orderType
+    orderType,
   ) => {
     try {
       // 1. Check session status
       setLoading(true);
-      const sessionRes = await axios.post(`${base_url}/api/checkSessionStatus`,
-        {sessionId, resturantId},
+      const sessionRes = await axios.post(
+        `${base_url}/api/checkSessionStatus`,
+        { sessionId, resturantId },
         {
           headers: {
             Accept: "*/*",
             "Content-Type": "application/json",
           },
-        }
+        },
       );
 
       if (sessionRes.data && sessionRes.data.payment_status === "paid") {
@@ -91,14 +103,14 @@ const page = () => {
             subtotal,
             user_uuid: Cookies.get("uuid"),
             orderType,
-            idToken: localStorage.getItem("id_token")
+            idToken: localStorage.getItem("id_token"),
           },
           {
             headers: {
               Accept: "*/*",
               "Content-Type": "application/json",
             },
-          }
+          },
         );
         if (orderRes.data?.status) {
           setLoading(false);
@@ -178,7 +190,8 @@ const page = () => {
       text: "You want to remove this item from Cart.",
       confirmButtonText: "Ok.",
       cancelButtonText: "Cancel.",
-    }).then(async (result) => {   // 👈 make this async
+    }).then(async (result) => {
+      // 👈 make this async
       if (result.isConfirmed) {
         try {
           setLoading(true);
@@ -313,7 +326,19 @@ const page = () => {
       if (Array.isArray(categoryData) && categoryData.length > 0) {
         const categoryItems = categoryData.map((item) => {
           // Default item data
-          const name = item.toppingName || item.chrustName || item.ingredientName || item.styleName || item.fishName || item.meatpreparationName || item.sideName || item.extraName || item.sodaName || item.sauceName || item.combotagName || "Unnamed";
+          const name =
+            item.toppingName ||
+            item.chrustName ||
+            item.ingredientName ||
+            item.styleName ||
+            item.fishName ||
+            item.meatpreparationName ||
+            item.sideName ||
+            item.extraName ||
+            item.sodaName ||
+            item.sauceName ||
+            item.combotagName ||
+            "Unnamed";
           const type = item.type || "";
           const price = item.price || "";
           let description = `${name}`;
@@ -324,7 +349,7 @@ const page = () => {
           return description;
         });
 
-        if(key != "normal"){
+        if (key != "normal") {
           category = category.replace("Extra", "");
         }
         // Join category data into output with category name
@@ -335,10 +360,58 @@ const page = () => {
   };
   const capitalize = (str) => str.charAt(0).toUpperCase() + str.slice(1);
 
+  const handleCheckout = async () => {
+    try {
+      const res = await axios.get(
+        `${base_url}/api/GetResturantDetails/${resturantId}/${storeId}`,
+      );
+      // ✅ correct extraction
+      const operatingHoursStr = res.data.data.operatingHours;
+      const dateTime = res.data.dateTime;
+      const hours = JSON.parse(operatingHoursStr);
+
+      const isOpen = isRestaurantOpen(hours, dateTime);
+      if (!isOpen) {
+        Swal.fire({
+          icon: "error",
+          title: "Restaurant Closed",
+          text: "Sorry, the Restaurant is Currently Closed.",
+        });
+        return;
+      }
+      // ✅ OPEN → redirect
+      router.push("/checkout");
+    } catch (err) {
+      console.error("Checkout error:", err);
+    }
+  };
+  const DAY_KEYS = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"];
+
+  const toMinutes = (time) => {
+    const [h, m] = time.split(":").map(Number);
+    return h * 60 + m;
+  };
+
+  const isRestaurantOpen = (operatingHours, currentDateTime) => {
+    const now = new Date(currentDateTime.replace(" ", "T"));
+    const todayKey = DAY_KEYS[now.getDay()];
+    const currentMinutes = now.getHours() * 60 + now.getMinutes();
+    const todaySchedule = operatingHours.find((d) => d.day === todayKey);
+    if (!todaySchedule) return false;
+
+    const openMinutes = toMinutes(todaySchedule.openTime);
+    const closeMinutes = toMinutes(todaySchedule.closeTime);
+    // ✅ Normal case (same day)
+    if (openMinutes < closeMinutes) {
+      return currentMinutes >= openMinutes && currentMinutes <= closeMinutes;
+    }
+    // ✅ Overnight case (06:00 → 02:00)
+    return currentMinutes >= openMinutes || currentMinutes <= closeMinutes;
+  };
   return (
     <FoodKingLayout>
       {loading && <Loader />}
-      <PageBanner pageName={"Cart"} pageKey={"Cart"}/>
+      <PageBanner pageName={"Cart"} pageKey={"Cart"} />
       <section className="cart-section section-padding fix">
         <div className="container">
           <div className="main-cart-wrapper">
@@ -366,11 +439,11 @@ const page = () => {
 
                             const normalDetails = getNonEmptyDetails(
                               details,
-                              "normal"
+                              "normal",
                             );
                             const extraDetails = getNonEmptyDetails(
                               details,
-                              "extra"
+                              "extra",
                             );
 
                             return (
@@ -378,7 +451,7 @@ const page = () => {
                                 <td className="cart-item-info">
                                   <img
                                     src={`${basecatagories}menu/${encodeURIComponent(
-                                      item.image
+                                      item.image,
                                     )}`}
                                     alt={item.menuName || "Product"}
                                     height={90}
@@ -427,7 +500,7 @@ const page = () => {
                                   ${" "}
                                   <span className="base-price">
                                     {(parseFloat(item.menuPrice) || 0).toFixed(
-                                      2
+                                      2,
                                     )}
                                   </span>
                                 </td>
@@ -541,23 +614,24 @@ const page = () => {
                           {" "}
                           $
                           {(calculateCartTotal() + calculateTaxTotal()).toFixed(
-                            2
+                            2,
                           )}{" "}
                         </span>
                       </li>
                     </ul>
                     <div className="chck">
-                      {/* <div 
-                         onClick={handleCheckout}
-                        className="theme-btn border-radius-none">
+                      <div
+                        onClick={handleCheckout}
+                        className="theme-btn border-radius-none"
+                      >
                         Checkout
-                      </div> */}
-                      <Link
+                      </div>
+                      {/* <Link
                         href="/checkout"
                         className="theme-btn border-radius-none"
                       >
                         Checkout
-                      </Link>
+                      </Link> */}
                     </div>
                   </div>
                 </div>

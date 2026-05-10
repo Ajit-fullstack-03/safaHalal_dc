@@ -22,6 +22,7 @@ const GetcategorymenuSlice = createSlice({
   name: "menu",
   initialState: {
     menuItems: [],
+    dateTime: null,
     loading: false,
     error: null,
   },
@@ -34,6 +35,7 @@ const GetcategorymenuSlice = createSlice({
       .addCase(fetchMenu.fulfilled, (state, action) => {
         state.loading = false;
         state.menuItems = action.payload?.data || [];
+        state.dateTime = action.payload?.dateTime || null;
       })
       .addCase(fetchMenu.rejected, (state, action) => {
         state.loading = false;

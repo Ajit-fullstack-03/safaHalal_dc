@@ -1,4 +1,8 @@
+"use client";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import Link from "next/link";
+import { base_url, resturantId, storeId } from "@/utility/config";
 
 const Footer = ({ footer }) => {
   switch (footer) {
@@ -12,6 +16,33 @@ const Footer = ({ footer }) => {
   }
 };
 const Footer1 = () => {
+  const [data, setData] = useState([]);
+  const getresturantData = async () => {
+    try {
+      const res = await axios.get(
+        `${base_url}/api/GetResturantDetails/${resturantId}/${storeId}`,
+      );
+      // ✅ correct extraction
+      const data = res.data.data;
+      const timings = data?.operatingHours
+        ? JSON.parse(data.operatingHours)
+        : [];
+      setData(timings);
+    } catch (err) {
+      console.error("Checkout error:", err);
+    }
+  };
+  useEffect(() => {
+    getresturantData();
+  }, []);
+  const formatTime = (time) => {
+    const [hour, minute] = time.split(":").map(Number);
+
+    const suffix = hour >= 12 ? "PM" : "AM";
+    const hour12 = hour % 12 || 12;
+
+    return `${hour12}:${minute.toString().padStart(2, "0")} ${suffix}`;
+  };
   return (
     <footer className="footer-section fix section-bg">
       <div className="burger-shape">
@@ -43,13 +74,19 @@ const Footer1 = () => {
                     safahalaldc@gmail.com
                   </a>
                   <div className="social-icon d-flex align-items-center">
-                    <a href="https://www.facebook.com/profile.php?id=61569094628655" target="_blank">
+                    <a
+                      href="https://www.facebook.com/profile.php?id=61569094628655"
+                      target="_blank"
+                    >
                       <i className="fab fa-facebook-f" />
                     </a>
                     <a href="#">
                       <i className="fab fa-twitter" />
                     </a>
-                    <a href="https://youtube.com/@safahalal-d7w?si=pP2T3B6xXzzIbVYD" target="_blank">
+                    <a
+                      href="https://youtube.com/@safahalal-d7w?si=pP2T3B6xXzzIbVYD"
+                      target="_blank"
+                    >
                       <i className="fab fa-youtube" />
                     </a>
                     <a href="#">
@@ -122,14 +159,11 @@ const Footer1 = () => {
                   <h4>Address:</h4>
                 </div>
                 <div className="footer-address-text">
-                  <h6>
-                    1917 18th St NW, Washington, DC 20009, United States
-                  </h6>
+                  <h6>1917 18th St NW, Washington, DC 20009, United States</h6>
                   <h5>Contact:</h5>
                   <h6>
                     <a href="tel:+1 202-885-9430">+1 202-885-9430</a>
                   </h6>
-
                 </div>
               </div>
             </div>
@@ -143,18 +177,25 @@ const Footer1 = () => {
                 </div>
                 <div className="footer-apps-items">
                   {/* <div className="support-text"> */}
-                    {/* <h5>24/7 Support center</h5> */}
-                    <span>
-                      Thursday	11 AM–10 PM <br />
-                      Friday	11 AM–11 PM <br />
-                      Saturday	11 AM–11 PM <br />
-                      Sunday	11 AM–9 PM <br />
-                      Monday	11 AM–10 PM <br />
-                      Tuesday	11 AM–10 PM <br />
-                      Wednesday	11 AM–10 PM <br />
-                      {/* 9.30am – 6.30pm 
+                  {/* <h5>24/7 Support center</h5> */}
+                  <span>
+                    {/* Thursday 11 AM–10 PM <br />
+                    Friday 11 AM–11 PM <br />
+                    Saturday 11 AM–11 PM <br />
+                    Sunday 11 AM–9 PM <br />
+                    Monday 11 AM–10 PM <br />
+                    Tuesday 11 AM–10 PM <br />
+                    Wednesday 11 AM–10 PM <br /> */}
+                    {/* 9.30am – 6.30pm 
                     Monday to Friday */}
-                    </span>
+
+                    {data?.map((item, index) => (
+                      <p className="mb-2" key={index}>
+                        {item.day_name} {formatTime(item.openTime)} -{" "}
+                        {formatTime(item.closeTime)} <br />
+                      </p>
+                    ))}
+                  </span>
                   {/* </div> */}
                 </div>
               </div>
